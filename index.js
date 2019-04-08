@@ -10,16 +10,12 @@ const { logError } = require('./utils/log');
  * Bot
  */
  require("dotenv").config();
-
- var bot = require('./bots');
- require('./web')(bot);
+const bot = require('./bot');
+require('./web')(bot);
 
 bot.telegram.getMe().then((botInfo) => {
 	bot.options.username = botInfo.username;
 	bot.context.botInfo = botInfo;
-}).then(() => {
-  //bot.startWebhook('/webhook', null, '3000');
-	//bot.startPolling();
 });
 
 
