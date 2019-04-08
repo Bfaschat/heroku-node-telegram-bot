@@ -1,55 +1,82 @@
-# heroku-node-telegram-bot
-Starter pack for running telegram bot on the Heroku using Node.js
+<p align="center">
+  <img src="assets/logo.png" width="180" height="180">
+  <h1 align="center">The Guard Bot</h1>
+</p>
+The Guard is a Telegram bot made to help admins manage their groups.
 
-# Step-by-step
+Initially created to moderate [The Devs Network](https://thedevs.network).
 
-### Try bot locally
+**NOTE: The Guard is in beta phase;**
+**it has known issues, but it's successfully being used in production**
 
-1. Create your own bot using Telegram's [BotFather](https://core.telegram.org/bots#3-how-do-i-create-a-bot) and grab your TOKEN.
-2. Clone or download and unpack this repo.
-3. Go to the app's folder using `cd ~/heroku-node-telegram-bot`
-4. Run `npm install` (in some cases you will need to run this with sudo, you know, just the permissions).
-5. Rename .env_example file into .env and set TOKEN to the value, you've got from the BotFather.
-6. Run `npm start` and send smth to your bot.
-7. After it says "hello" to you, we can go to the next step😎
+If you need help with using the Bot or setting it up, join our [Support Chat](https://t.me/theguardsupport).
 
-### Deploy your bot to the heroku
+## Setup
+You need [Node.js](https://nodejs.org/) (> 8.1) to run this bot.
 
-1. Create the [Heroku account](https://heroku.com) and install the [Heroku Toolbelt](https://toolbelt.heroku.com/).
-2. Login to your Heroku account using `heroku login`.
-3. Go to the app's folder using `cd ~/heroku-node-telegram-bot`
-4. Run `heroku create` to prepare the Heroku environment.
-5. Run `heroku config:set TOKEN=SET HERE THE TOKEN YOU'VE GOT FROM THE BOTFATHER` and `heroku config:set HEROKU_URL=$(heroku info -s | grep web_url | cut -d= -f2)` to configure environment variables on the server.
-6. Run `git add -A && git commit -m "Ready to run on heroku" && git push heroku master` to deploy your bot to the Heroku server.
-7. Send smth to the bot to check out if it works ok.
+1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
+2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
+3. Install dependencies via `npm install`.
+4. Copy `example.config.js` to `config.js` and edit it.
+5. Start the bot via `npm start`.
 
-### Going further
+## Setup with Docker
+You need to have [docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-from-a-package) installed on your machine.
 
-Now you may wish to add other functionality to your bot and here you can face some problems. The reason is that in development mode your bot works using [polling](https://en.wikipedia.org/wiki/Push_technology#Long_polling) and on the heroku server it uses the [webhook](https://core.telegram.org/bots/api#setwebhook), because heroku will shut down the web-server after a period of inactivity that will result in your polling loop to shut down too. Once webhook was enabled, telegram will return an error `{"ok":false,"error_code":409,"description":"Error: Conflict: another webhook is active"}` when you will try to use polling again, and it's actually ok.
+1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
+2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
+3. Copy `example.config.js` to `config.js` and edit it.
+4. Run `docker build -t the_guard_bot .` to build image.
+5. Run `docker run --rm -itd the_guard_bot` to start the bot.
 
-To go back to development mode, you will need to run `npm run switch_to_dev`. This script will disable current webhook and start your local server. Don't be afraid - when you will finish with the changes you may simply push your bot to heroku using `git push heroku master`. Then you should restart your app using `heroku restart`. It will set the webhook again.
+Now you can add the bot as **administrator** to your groups.
 
-### Possible OS issues
+## Features
+* Synchronized database across multiple groups.
+* Adding admins to the bot.
+* Auto-remove and warn channels and groups ads.
+* Kick bots added by users.
+* Warn and ban users to control the group.
+* Commands work with replying, mentioning and ID.
+* Removes commands and temporary bot messages.
+* Ability to create custom commands.
+* Supports plugins.
 
-As i work on MacOS and sometimes on Ubuntu, you may face some problems with my npm scripts, so let's figure out how they work.
+Overall, keeps the groups clean and healthy to use.
 
-`npm run switch_to_dev` runs `export $(cat .env | xargs) && wget --spider https://api.telegram.org/bot$TOKEN/setWebhook?url= --delete-after && node index.js` which is actually an API call which will reset webhook (with the TOKEN from your environment variable) and `npm start`. 
+## Commands
+Command                 | Role       | Available at | Description
+----------------------- | ---------- | ------------ | -----------------
+`/admin`                | _Master_   | _Everywhere_ | Makes the user admin in the bot and groups.
+`/unadmin`              | _Master_   | _Everywhere_ | Demotes the user from admin list.
+`/leave <name\|id>`     | _Master_   | _Everywhere_ | Make the bot to leave the group cleanly.
+`/hidegroup`            | _Master_   | _Groups_     | Revoke invite link and hide the group from `/groups` list.
+`/showgroup`            | _Master_   | _Groups_     | Make the group accessible via `/groups` list.
+`/warn <reason>`        | _Admin_    | _Groups_     | Warns the user.
+`/unwarn`               | _Admin_    | _Everywhere_ | Removes the last warn from the user.
+`/nowarns`              | _Admin_    | _Everywhere_ | Clears warns for the user.
+`/ban <reason>`         | _Admin_    | _Groups_     | Bans the user from groups.
+`/unban`                | _Admin_    | _Everywhere_ | Removes the user from ban list.
+`/user`                 | _Admin_    | _Everywhere_ | Shows the status of the user.
+`/addcommand <name>`    | _Admin_    | _In-Bot_     | Create a custom command.
+`/removecommand <name>` | _Admin_    | _In-Bot_     | Remove a custom command.
+`/staff`                | _Everyone_ | _Everywhere_ | Shows a list of admins.
+`/link`                 | _Everyone_ | _Everywhere_ | Shows the current group's link.
+`/groups`               | _Everyone_ | _Everywhere_ | Shows a list of groups which the bot is admin in.
+`/report`               | _Everyone_ | _Everywhere_ | Reports the replied-to message to admins.
+`/commands`             | _Everyone_ | _In-Bot_     | Shows a list of available commands.
+`/help` \| `/start`     | _Everyone_ | _In-Bot_     | How to use the bot.
 
-**If wget don't work (or is not installed) on your OS**, you can simply open the `https://api.telegram.org/botYOUR_TOKEN/setWebhook?url=` in your browser, but don't forget to replace YOUR_TOKEN with the token, you've got from the BotFather.
+All commands and actions are synchronized across all of the groups managed by the owner and they work with **replying**, **mentioning** or **ID** of a user.
 
-If your bot is not responding locally, in most cases, you will need to reset the environment variables by restarting your application.
+If used by reply, `/ban` and `/warn` would remove the replied-to message.
 
-### Links and references
+The bot is still in beta phase so feel free to [open issues](https://github.com/thedevs-network/the-guard-bot/issues/new) and ask for features.
 
-Actually, this repo is created because I've faced problems when I was trying to run the bot using [mvalipour's article](http://mvalipour.github.io/node.js/2015/12/06/telegram-bot-webhook-existing-express/) and [this PR](https://github.com/mvalipour/telegram-bot-webhook/pull/3) to his repo. Still, these links will be very useful for the beginners. 
+[**Roadmap**](https://github.com/TheDevs-Network/the-guard-bot/projects/1)
 
-The solution relies on the [node-telegram-bot-api wrapper](https://github.com/yagop/node-telegram-bot-api) by the @yagop, so you can find more info there.
+---
 
-Also check out [official API docs](https://core.telegram.org/bots/api) by Telegram team, it may be helpfull.
+> Important Note: Under the AGPL-3.0 license, if you're running your own instance, you should add a link to the source [(this repository)](https://github.com/TheDevs-Network/the-guard-bot) in your bot's bio. If you're modifying this source and making your own bot, you should link to the source of your own version of the bot according to the AGPL-3.0 license. Check [LICENSE](LICENSE) for more info.
 
-Good luck, BotCoder!
-
-P.S. If you see that something is not working, please, open an [issue](https://github.com/volodymyrlut/heroku-node-telegram-bot/issues) or send me a PR if you've managed to make code better.
-
-Created with great passion for bots.
-In case of any bot development proposals, contact me [here](http://lut.rocks).
+`The Guard` icon is from [Entypo+](http://entypo.com/) by Daniel Bruce.
