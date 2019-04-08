@@ -1,0 +1,4 @@
+{"status":"admin","warns":[],"first_name":"死","last_name":"","id":197005208,"username":"bfaschat","_id":"4qiii9wptMZWBz7i"}
+{"$$indexCreated":{"fieldName":"id","unique":true,"sparse":false}}
+{"$$indexCreated":{"fieldName":"status","unique":false,"sparse":false}}
+{"$$indexCreated":{"fieldName":"username","unique":true,"sparse":true}}
