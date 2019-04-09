@@ -12,7 +12,7 @@ let cronJob;
 if (process.env.NODE_ENV === 'development') {
 	bot.launch({
   webhook: {
-    domain: `${process.env.HEROKU_URL}/webhook`,
+    domain: "https://tspambot.herokuapp.com/webhook",
     port: 4000
   }
 })
@@ -22,13 +22,13 @@ if (process.env.NODE_ENV === 'development') {
 const http = require('http');
 const express = require('express');
 const app = express();
-app.get("${process.env.HEROKU_URL}/", (request, response) => {
+app.get("https://tspambot.herokuapp.com", (request, response) => {
   console.log(' \u{1F604}' + " Ping Received");
   response.sendStatus(200);
 });
 //app.listen(process.env.PORT);
 setInterval(() => {
-  http.get(`${process.env.HEROKU_URL}/`);
+  http.get("https://tspambot.herokuapp.com/");
 }, 280000);
 app.listen(5000, () => {
     console.log('Your app is listening on port ' + 5000 + ' \u{1F604}');
