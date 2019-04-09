@@ -9,6 +9,15 @@ const cron = require('cron');
 const exec = require('child_process').exec;
 let cronJob;
 
+if (process.env.NODE_ENV === 'development') {
+	bot.launch({
+  webhook: {
+    domain: "https://tspambot.herokuapp.com/webhook",
+    port: 4000
+  }
+})
+}
+
 //bot.telegram.setWebhook(`${process.env.HEROKU_URL}/webhook`);
 const http = require('http');
 const express = require('express');

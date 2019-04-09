@@ -14,12 +14,7 @@ bot.telegram.getMe().then((botInfo) => {
 	bot.options.username = botInfo.username;
 	bot.context.botInfo = botInfo;
 }).then(() => {
-	bot.launch({
-  webhook: {
-    domain: "https://tspambot.herokuapp.com/webhook",
-    port: 3000
-  }
-})
+	bot.startWebhook('/webhook', null, '3000');
 });
 process.once('SIGUSR2', function () {
   gracefulShutdown(function () {
